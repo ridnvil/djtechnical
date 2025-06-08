@@ -117,6 +117,20 @@ func (h *PayrollController) RunPayroll(c *fiber.Ctx) error {
 
 func (h *PayrollController) GetPayrollSummary(c *fiber.Ctx) error {
 	role := c.Locals("isAdmin").(bool)
+	periodId := c.Params("period_id")
+	if periodId == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Period ID is required",
+		})
+	}
+
+	periodID, err := strconv.Atoi(periodId)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Invalid period ID format",
+			"error":   err.Error(),
+		})
+	}
 
 	page, _ := strconv.Atoi(c.Query("page", "1"))
 	limit, _ := strconv.Atoi(c.Query("limit", "10"))
@@ -130,7 +144,7 @@ func (h *PayrollController) GetPayrollSummary(c *fiber.Ctx) error {
 	}
 
 	if all {
-		datapayroll, errget := services.GetPayrollAll(h.DB, sort)
+		datapayroll, errget := services.GetPayrollAll(h.DB, sort, uint(periodID))
 		if errget != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 				"message": "Failed to retrieve payroll data",
@@ -149,7 +163,7 @@ func (h *PayrollController) GetPayrollSummary(c *fiber.Ctx) error {
 			"data":    datapayroll,
 		})
 	} else {
-		datapayroll, errget := services.GetPayrollDataPagination(h.DB, page, limit, sort)
+		datapayroll, errget := services.GetPayrollDataPagination(h.DB, page, limit, sort, uint(periodID))
 		if errget != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 				"message": "Failed to retrieve payroll data",

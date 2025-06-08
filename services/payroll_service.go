@@ -8,6 +8,7 @@ import (
 	"github.com/go-redis/redis/v8"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
+	"time"
 )
 
 func GeneratePayroll(db *gorm.DB, periodID uint, ctx *fiber.Ctx, client *redis.Client, requestID string) error {
@@ -39,12 +40,25 @@ func GeneratePayroll(db *gorm.DB, periodID uint, ctx *fiber.Ctx, client *redis.C
 	return nil
 }
 
-func GetPayrollDataPagination(db *gorm.DB, page int, pageSize int, sort string) (models.PayRollResponse, error) {
+func GetPayrollDataPagination(db *gorm.DB, page int, pageSize int, sort string, periodID uint) (models.PayRollResponse, error) {
 	var payroll models.PayRollResponse
 	var payslips []models.Payslip
-	if err := db.Scopes(utils.Paginate(page, pageSize)).Preload("User").Preload("Period").Order("created_at " + sort).Find(&payslips).Error; err != nil {
+	if err := db.Scopes(utils.Paginate(page, pageSize)).Preload("User").Preload("Period").Where("period_id = ?", periodID).Order("created_at " + sort).Find(&payslips).Error; err != nil {
 		return models.PayRollResponse{}, err
 	}
+
+	var totalCount int64
+	if err := db.Table("users").Select("COUNT(*) AS totalCount").Where("role = ?", "employee").Scan(&totalCount).Error; err != nil {
+		return models.PayRollResponse{}, err
+	}
+	payroll.TotalEmployees = int(totalCount)
+
+	var periodDate time.Time
+	if err := db.Table("attendance_periods").Select("end_date").Where("id = ?", periodID).Scan(&periodDate).Error; err != nil {
+		return models.PayRollResponse{}, err
+	}
+
+	payroll.Period = utils.ConvertMonthToIDString(periodDate)
 
 	for _, slip := range payslips {
 		payroll.Payslips = append(payroll.Payslips, models.PayslipResponse{
@@ -66,12 +80,25 @@ func GetPayrollDataPagination(db *gorm.DB, page int, pageSize int, sort string) 
 	return payroll, nil
 }
 
-func GetPayrollAll(db *gorm.DB, sort string) (models.PayRollResponse, error) {
+func GetPayrollAll(db *gorm.DB, sort string, periodID uint) (models.PayRollResponse, error) {
 	var payroll models.PayRollResponse
 	var payslips []models.Payslip
-	if err := db.Preload("User").Preload("Period").Order("created_at " + sort).Find(&payslips).Error; err != nil {
+	if err := db.Preload("User").Preload("Period").Where("period_id = ?", periodID).Order("created_at " + sort).Find(&payslips).Error; err != nil {
 		return models.PayRollResponse{}, err
 	}
+
+	var totalCount int64
+	if err := db.Table("users").Select("COUNT(*) AS totalCount").Where("role = ?", "employee").Scan(&totalCount).Error; err != nil {
+		return models.PayRollResponse{}, err
+	}
+	payroll.TotalEmployees = int(totalCount)
+
+	var periodDate time.Time
+	if err := db.Table("attendance_periods").Select("end_date").Where("id = ?", periodID).Scan(&periodDate).Error; err != nil {
+		return models.PayRollResponse{}, err
+	}
+
+	payroll.Period = utils.ConvertMonthToIDString(periodDate)
 
 	for _, slip := range payslips {
 		payroll.Payslips = append(payroll.Payslips, models.PayslipResponse{

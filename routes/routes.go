@@ -32,5 +32,5 @@ func SetupRoutes(app *fiber.App, db *gorm.DB, redis *redis.Client) {
 	admin := app.Group("/api/admin")
 	admin.Post("/period", middleWareHandler.JWTMiddleware, middleWareHandler.ValidateUserRole, logHandler.LogAction, payrollController.CreatePeriod)
 	admin.Post("/payroll", middleWareHandler.JWTMiddleware, middleWareHandler.ValidateUserRole, logHandler.LogAction, payrollController.RunPayroll)
-	admin.Get("/summary", middleWareHandler.JWTMiddleware, middleWareHandler.ValidateUserRole, logHandler.LogAction, payrollController.GetPayrollSummary)
+	admin.Get("/summary/:period_id", middleWareHandler.JWTMiddleware, middleWareHandler.ValidateUserRole, logHandler.LogAction, payrollController.GetPayrollSummary)
 }

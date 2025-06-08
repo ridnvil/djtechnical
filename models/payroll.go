@@ -1,8 +1,10 @@
 package models
 
 type PayRollResponse struct {
-	Payslips []PayslipResponse `json:"payslips"`
-	TotalTHP float64           `json:"total_thp"`
+	TotalEmployees int               `json:"total_employees"`
+	TotalTHP       float64           `json:"total_thp"`
+	Period         string            `json:"period"`
+	Payslips       []PayslipResponse `json:"payslips"`
 }
 
 type PayslipResponse struct {

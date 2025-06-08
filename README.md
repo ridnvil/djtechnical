@@ -293,9 +293,10 @@ Initiates the payroll processing for a specific date.
 
 Retrieves the payroll summary data.
 
-- **URL**: `/api/admin/summary`
+- **URL**: `/api/admin/summary/:period_id`
 - **Method**: `GET`
 - **Authentication**: Required (JWT Token with Admin privileges)
+- **URL Parameters**: `period_id` - ID of the payroll period
 - **Query Parameters**:
   - `page` (optional, default: 1): Page number for pagination
   - `limit` (optional, default: 10): Number of items per page
