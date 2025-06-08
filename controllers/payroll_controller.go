@@ -125,7 +125,7 @@ func (h *PayrollController) GetPayrollSummary(c *fiber.Ctx) error {
 
 	if !role {
 		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{
-			"message": "You do not have permission to create a payroll period",
+			"message": "You do not have permission to get payroll",
 		})
 	}
 
