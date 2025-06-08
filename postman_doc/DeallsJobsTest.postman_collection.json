@@ -334,18 +334,19 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/admin/summary?page=1&page_size=10&sort=asc&all=true",
+							"raw": "{{baseUrl}}/admin/summary/3?page=3&page_size=10&sort=asc&all=false",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"admin",
-								"summary"
+								"summary",
+								"3"
 							],
 							"query": [
 								{
 									"key": "page",
-									"value": "1",
+									"value": "3",
 									"description": "only use if param \"all\" is false"
 								},
 								{
@@ -359,7 +360,7 @@
 								},
 								{
 									"key": "all",
-									"value": "true",
+									"value": "false",
 									"description": "if true, page and page_size will unused."
 								}
 							]
