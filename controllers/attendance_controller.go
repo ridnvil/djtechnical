@@ -47,7 +47,10 @@ func (h *AttendanceController) SubmitAttendance(c *fiber.Ctx) error {
 		})
 	}
 
-	if checkInDate.Before(time.Now()) && checkInDate.After(time.Now()) {
+	today := time.Now().AddDate(0, 0, 0)
+	checkInDateOnly := time.Date(checkInDate.Year(), checkInDate.Month(), checkInDate.Day(), 0, 0, 0, 0, checkInDate.Location())
+
+	if checkInDateOnly.Format("2006-01-02") != today.Format("2006-01-02") {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "Invalid date",
 			"error":   "Check-in date must be today",
@@ -78,11 +81,11 @@ func (h *AttendanceController) SubmitAttendance(c *fiber.Ctx) error {
 	}
 
 	var checkedIn struct {
-		UsedID uint      `json:"used_id"`
+		UserID uint      `json:"used_id"`
 		Date   time.Time `json:"date"`
 	}
 
-	if err := h.DB.Table("attendances").Where("user_id = ? AND date = ?", employeeID, checkInDate).Scan(&checkedIn).Error; err != nil {
+	if err := h.DB.Table("attendances").Select("user_id, date").Where("user_id = ? AND date = ?", employeeID, checkInDate).Scan(&checkedIn).Error; err != nil {
 		return c.Status(fiber.StatusConflict).JSON(fiber.Map{
 			"message": "Error check attendance",
 			"error":   err,
@@ -98,7 +101,7 @@ func (h *AttendanceController) SubmitAttendance(c *fiber.Ctx) error {
 	attendance.RequestIP = c.IP()
 	attendance.RequestID = c.Locals("trackingID").(string)
 
-	if checkedIn.UsedID != 0 {
+	if checkedIn.UserID != 0 {
 		return c.Status(fiber.StatusConflict).JSON(fiber.Map{
 			"message": "Attendance already submitted for this date",
 			"error":   "Attendance already exists",
