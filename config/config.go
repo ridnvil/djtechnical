@@ -6,10 +6,7 @@ import (
 	"github.com/go-redis/redis/v8"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 	"log"
-	"os"
-	"time"
 )
 
 type EnvConfig struct {
@@ -23,17 +20,17 @@ func InitDatabase() *gorm.DB {
 	if err := env.Parse(&envCfg); err != nil {
 		log.Fatal(err)
 	}
-	newLogger := logger.New(
-		log.New(os.Stdout, "\r\n", log.LstdFlags),
-		logger.Config{
-			SlowThreshold: time.Second,
-			LogLevel:      logger.Info,
-			Colorful:      true,
-		},
-	)
+	//newLogger := logger.New(
+	//	log.New(os.Stdout, "\r\n", log.LstdFlags),
+	//	logger.Config{
+	//		SlowThreshold: time.Second,
+	//		LogLevel:      logger.Info,
+	//		Colorful:      true,
+	//	},
+	//)
 
 	db, err := gorm.Open(postgres.Open(envCfg.Host), &gorm.Config{
-		Logger: newLogger,
+		//Logger: newLogger,
 	})
 	if err != nil {
 		log.Fatal("Failed to connect to the database:", err)

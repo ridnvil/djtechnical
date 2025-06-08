@@ -126,15 +126,14 @@ func GeneratePaySlipByEmployeeID(db *gorm.DB, employeeID uint, ip string, reques
 		GeneratedAt:        time.Now(),
 		GeneratedBy:        &user.ID,
 		RequestID:          &requestID,
-		User:               user,
-		Period:             period,
 	}
-
-	log.Println(paySlip)
 
 	if err := db.Table("payslips").Where("id = ? AND user_id = ? AND period_id = ?", tempPaySlip.ID, user.ID, period.ID).Updates(&paySlip).Error; err != nil {
 		return models.Payslip{}, err
 	}
+
+	paySlip.Period = period
+	paySlip.User = user
 
 	return paySlip, nil
 }
