@@ -1,0 +1,405 @@
+{
+	"info": {
+		"_postman_id": "44def882-b87b-40c6-9167-f55efc133d8a",
+		"name": "DealsJobs Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "1768526",
+		"_collection_link": "https://ngode8.postman.co/workspace/Ngode~e009b5d4-15a1-47c8-81e6-a7f6ea10abed/collection/1768526-44def882-b87b-40c6-9167-f55efc133d8a?action=share&source=collection_link&creator=1768526"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var xsrfToken = pm.cookies.get(\"token\");\r",
+									"if (xsrfToken) {\r",
+									"    pm.environment.set(\"token\", xsrfToken);\r",
+									"    console.log(\"XSRF Token stored:\", xsrfToken);\r",
+									"} else {\r",
+									"    console.log(\"XSRF Token not found\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"admin123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login Employee",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var xsrfToken = pm.cookies.get(\"token\");\r",
+									"if (xsrfToken) {\r",
+									"    pm.environment.set(\"token\", xsrfToken);\r",
+									"    console.log(\"XSRF Token stored:\", xsrfToken);\r",
+									"} else {\r",
+									"    console.log(\"XSRF Token not found\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"employee1\",\r\n    \"password\": \"employee123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Employee",
+			"item": [
+				{
+					"name": "Submit Attendance",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"date\": \"2025-06-06 09:28:00\" // this day must same with today\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/employee/attendance",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"employee",
+								"attendance"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Submit Overtime",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"date\": \"2025-06-10 10:00:00\",\r\n    \"hours\": 3 // hours only accepting in 1 until 3 hours\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/employee/overtime",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"employee",
+								"overtime"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Submit Reimbursement",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"date\": \"2025-06-08\",\r\n    \"amount\": 50000,\r\n    \"description\": \"Description test\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/employee/reimbursement",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"employee",
+								"reimbursement"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Submit Attachment Reimbursement",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "files",
+									"type": "file",
+									"src": [
+										"/C:/Users/M1403/Downloads/WhatsApp Image 2025-06-04 at 7.37.36 PM.jpeg",
+										"/C:/Users/M1403/Downloads/ngode-logo.png"
+									]
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/employee/reimbursement/uploads/2",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"employee",
+								"reimbursement",
+								"uploads",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Generate Payslip",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/employee/payslip",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"employee",
+								"payslip"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Submit Period",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"start_date\": \"2025-06-01 07:00:00\",\r\n    \"end_date\": \"2025-06-30 07:00:00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/period",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"period"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Submit Payroll",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"payroll_date\": \"2025-06-29 07:00:00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/payroll",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"payroll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Summary Payroll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/summary?page=1&page_size=10&sort=asc&all=true",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"summary"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"description": "only use if param \"all\" is false"
+								},
+								{
+									"key": "page_size",
+									"value": "10",
+									"description": "only use if param \"all\" is false"
+								},
+								{
+									"key": "sort",
+									"value": "asc"
+								},
+								{
+									"key": "all",
+									"value": "true",
+									"description": "if true, page and page_size will unused."
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	]
+}
