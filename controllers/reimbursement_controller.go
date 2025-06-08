@@ -25,6 +25,7 @@ func NewReimbursementController(db *gorm.DB) *ReimbursementController {
 
 func (h *ReimbursementController) SubmitReimbursement(c *fiber.Ctx) error {
 	userID := c.Locals("userID").(uint)
+	requestID := c.Locals("requestID").(string)
 	var reimbusementData struct {
 		Date        string  `json:"date"`
 		Amount      float64 `json:"amount"`
@@ -73,6 +74,7 @@ func (h *ReimbursementController) SubmitReimbursement(c *fiber.Ctx) error {
 	reimbursement.PeriodID = period.ID
 	reimbursement.CreatedBy = &userID
 	reimbursement.RequestIP = c.IP()
+	reimbursement.RequestID = requestID
 
 	if err := h.DB.Create(&reimbursement).Error; err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{

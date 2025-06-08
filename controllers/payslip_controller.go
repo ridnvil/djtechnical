@@ -18,7 +18,8 @@ func NewPayslipController(db *gorm.DB) *PayslipController {
 
 func (h *PayslipController) GeneratePayslip(c *fiber.Ctx) error {
 	id := c.Locals("userID").(uint)
-	dataPaySlip, err := services.GeneratePaySlipByEmployeeID(h.DB, id, c.IP())
+	requestID := c.Locals("trackingID").(string)
+	dataPaySlip, err := services.GeneratePaySlipByEmployeeID(h.DB, id, c.IP(), requestID)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "Failed to generate payslip",

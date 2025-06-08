@@ -16,6 +16,7 @@ type Reimbursement struct {
 	CreatedBy *uint
 	UpdatedBy *uint
 	RequestIP string `gorm:"type:inet"`
+	RequestID string `gorm:"type:uuid"`
 
 	User   User              `gorm:"foreignKey:UserID"`
 	Period AttendancesPeriod `gorm:"foreignKey:PeriodID"`

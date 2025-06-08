@@ -96,6 +96,7 @@ func (h *AttendanceController) SubmitAttendance(c *fiber.Ctx) error {
 	attendance.CreatedBy = &employeeID
 	attendance.UpdatedBy = &employeeID
 	attendance.RequestIP = c.IP()
+	attendance.RequestID = c.Locals("trackingID").(string)
 
 	if checkedIn.UsedID != 0 {
 		return c.Status(fiber.StatusConflict).JSON(fiber.Map{

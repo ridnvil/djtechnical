@@ -13,6 +13,7 @@ type AttendancesPeriod struct {
 	CreatedBy *uint
 	UpdatedBy *uint
 	RequestIP string `gorm:"type:inet"`
+	RequestID string `gorm:"type:uuid"`
 
 	CreatedByUser *User `gorm:"foreignKey:CreatedBy"`
 	UpdatedByUser *User `gorm:"foreignKey:UpdatedBy"`
@@ -33,6 +34,7 @@ type Attendance struct {
 	CreatedBy *uint
 	UpdatedBy *uint
 	RequestIP string `gorm:"type:inet"`
+	RequestID string `gorm:"type:uuid"`
 
 	User   User              `gorm:"foreignKey:UserID"`
 	Period AttendancesPeriod `gorm:"foreignKey:PeriodID"`

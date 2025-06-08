@@ -55,7 +55,7 @@ func GeneratePaySlipEmployees(db *gorm.DB) error {
 	return nil
 }
 
-func GeneratePaySlipByEmployeeID(db *gorm.DB, employeeID uint, ip string) (models.Payslip, error) {
+func GeneratePaySlipByEmployeeID(db *gorm.DB, employeeID uint, ip string, requestID string) (models.Payslip, error) {
 	var user models.User
 	if err := db.First(&user, employeeID).Error; err != nil {
 		return models.Payslip{}, err
@@ -127,6 +127,7 @@ func GeneratePaySlipByEmployeeID(db *gorm.DB, employeeID uint, ip string) (model
 		RequestIP:          ip,
 		GeneratedAt:        time.Now(),
 		GeneratedBy:        &user.ID,
+		RequestID:          requestID,
 		User:               user,
 		Period:             period,
 	}

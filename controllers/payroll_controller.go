@@ -67,6 +67,7 @@ func (h *PayrollController) CreatePeriod(c *fiber.Ctx) error {
 
 func (h *PayrollController) RunPayroll(c *fiber.Ctx) error {
 	role := c.Locals("isAdmin").(bool)
+	requestID := c.Locals("trackingID").(string)
 	var payRollData struct {
 		PayrollDate string `json:"payroll_date"`
 	}
@@ -100,7 +101,7 @@ func (h *PayrollController) RunPayroll(c *fiber.Ctx) error {
 		})
 	}
 
-	errpublish := services.GeneratePayroll(h.DB, period.ID, c, h.RDB)
+	errpublish := services.GeneratePayroll(h.DB, period.ID, c, h.RDB, requestID)
 
 	if errpublish != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{

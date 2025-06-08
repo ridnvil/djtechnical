@@ -40,6 +40,7 @@ func (a *AuditLogHandler) LogAction(ctx *fiber.Ctx) error {
 	actionType = strings.ToUpper(actionType)
 	logEntry := &models.AuditLog{
 		Method:      ctx.Method(),
+		Path:        ctx.Path(),
 		ActionType:  actionType,
 		PerformedBy: &userID,
 		RequestIP:   ctx.IP(),
@@ -53,6 +54,8 @@ func (a *AuditLogHandler) LogAction(ctx *fiber.Ctx) error {
 			"error":   err.Error(),
 		})
 	}
+
+	ctx.Locals("trackingID", recordID)
 
 	return ctx.Next()
 }

@@ -10,21 +10,23 @@ import (
 	"gorm.io/gorm"
 )
 
-func GeneratePayroll(db *gorm.DB, periodID uint, ctx *fiber.Ctx, client *redis.Client) error {
+func GeneratePayroll(db *gorm.DB, periodID uint, ctx *fiber.Ctx, client *redis.Client, requestID string) error {
 	var users []models.User
 	if err := db.Where("role = ?", "employee").Find(&users).Error; err != nil {
 		return err
 	}
 
 	var dataSending struct {
-		PeriodID uint          `json:"period_id"`
-		IP       string        `json:"ip"`
-		Users    []models.User `json:"users"`
+		PeriodID  uint          `json:"period_id"`
+		IP        string        `json:"ip"`
+		Users     []models.User `json:"users"`
+		RequestID string        `json:"request_id"`
 	}
 
 	dataSending.PeriodID = periodID
 	dataSending.IP = ctx.IP()
 	dataSending.Users = users
+	dataSending.RequestID = requestID
 
 	channel := "payroll_channel_employees"
 	jsonData, err := json.Marshal(dataSending)

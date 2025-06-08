@@ -54,9 +54,10 @@ func ProcessPayrollData(client *redis.Client, ctx context.Context, channel strin
 			}
 
 			var userData struct {
-				PeriodID uint          `json:"period_id"`
-				IP       string        `json:"ip"`
-				Users    []models.User `json:"users"`
+				PeriodID  uint          `json:"period_id"`
+				IP        string        `json:"ip"`
+				Users     []models.User `json:"users"`
+				RequestID string        `json:"request_id"`
 			}
 			if err := json.Unmarshal([]byte(msg.Payload), &userData); err != nil {
 				log.Println("Error unmarshalling message payload:", err)
@@ -64,7 +65,7 @@ func ProcessPayrollData(client *redis.Client, ctx context.Context, channel strin
 			}
 
 			for _, user := range userData.Users {
-				res, errupdate := services.GeneratePaySlipByEmployeeID(db, user.ID, userData.IP)
+				res, errupdate := services.GeneratePaySlipByEmployeeID(db, user.ID, userData.IP, userData.RequestID)
 				if errupdate != nil {
 					log.Printf("Error generating payslip for user ID %d: %v\n", user.ID, errupdate)
 					return

@@ -79,6 +79,7 @@ func (h *OvertimeController) SubmitOvertime(c *fiber.Ctx) error {
 	overtime.RequestIP = c.IP()
 	overtime.CreatedBy = &userID
 	overtime.PeriodID = period.ID
+	overtime.RequestID = c.Locals("trackingID").(string)
 
 	if err := h.DB.Create(&overtime).Error; err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{

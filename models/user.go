@@ -14,4 +14,5 @@ type User struct {
 	CreatedBy *uint
 	UpdatedBy *uint
 	RequestIP string `gorm:"type:inet"`
+	RequestID string `gorm:"type:uuid"`
 }
