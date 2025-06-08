@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
+	"log"
 	"path/filepath"
 	"time"
 )
@@ -25,7 +26,9 @@ func NewReimbursementController(db *gorm.DB) *ReimbursementController {
 
 func (h *ReimbursementController) SubmitReimbursement(c *fiber.Ctx) error {
 	userID := c.Locals("userID").(uint)
-	requestID := c.Locals("requestID").(string)
+	requestID := c.Locals("trackingID").(string)
+
+	log.Println(requestID)
 	var reimbusementData struct {
 		Date        string  `json:"date"`
 		Amount      float64 `json:"amount"`
